@@ -664,17 +664,19 @@ func (sd *SignedData) AddSignerInfo(chain []*x509.Certificate, signer crypto.Sig
 	if err != nil {
 		return err
 	}
-	md := hash.New()
-	if _, err = md.Write(content); err != nil {
-		return err
-	}
+
+	// md := hash.New()
+	// if _, err = md.Write(content); err != nil {
+	// 	return err
+	// }
 
 	// Build our SignedAttributes
 	stAttr, err := NewAttribute(oid.AttributeSigningTime, time.Now().UTC())
 	if err != nil {
 		return err
 	}
-	mdAttr, err := NewAttribute(oid.AttributeMessageDigest, md.Sum(nil))
+	// We are already sending though the hash of the content - no need to hash it again!
+	mdAttr, err := NewAttribute(oid.AttributeMessageDigest, content)
 	if err != nil {
 		return err
 	}
